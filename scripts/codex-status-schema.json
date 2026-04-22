@@ -1,0 +1,45 @@
+{
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["status", "summary", "files_changed", "exports_added", "dependencies_added", "concerns", "notes"],
+  "properties": {
+    "status": {
+      "type": "string",
+      "enum": ["DONE", "DONE_WITH_CONCERNS", "NEEDS_CONTEXT", "BLOCKED"]
+    },
+    "summary": {
+      "type": "string"
+    },
+    "files_changed": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "exports_added": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "dependencies_added": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "concerns": {
+      "type": "string"
+    },
+    "notes": {
+      "type": "string"
+    },
+    "deviations": {
+      "type": "string",
+      "description": "Explicit description of any place the executor diverged from task instructions, or empty string if none."
+    },
+    "routing_hint": {
+      "type": "string",
+      "enum": ["", "consider-sonnet"],
+      "description": "Advisory hint from the executor for the orchestrator's routing decisions. Empty when no concern."
+    },
+    "routing_hint_reasons": {
+      "type": "string",
+      "description": "Free-text reason for the routing_hint, e.g. 'single allowed file is 491 LOC'."
+    }
+  }
+}

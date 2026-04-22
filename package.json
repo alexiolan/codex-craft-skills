@@ -1,0 +1,12 @@
+{
+  "name": "craft-skills",
+  "version": "2.0.1",
+  "type": "module",
+  "description": "Codex-native structured development skills for any project",
+  "license": "GPL-3.0-only",
+  "scripts": {
+    "sync:check": "bash scripts/sync-check.sh",
+    "sync": "bash scripts/sync-host-context.sh \"$PWD\"",
+    "health": "bash -n scripts/install-codex-skill.sh && bash -n scripts/bootstrap-codex-project.sh && bash -n scripts/sync-host-context.sh"
+  }
+}

@@ -1,0 +1,39 @@
+{
+  "name": "craft-skills",
+  "version": "2.0.1",
+  "description": "Codex-native development skills for structured planning, implementation, testing, debugging, and review.",
+  "author": {
+    "name": "alexiolan",
+    "url": "https://github.com/alexiolan"
+  },
+  "homepage": "https://github.com/alexiolan/codex-craft-skills",
+  "repository": "https://github.com/alexiolan/codex-craft-skills",
+  "license": "MIT",
+  "keywords": [
+    "development",
+    "architecture",
+    "skills",
+    "agents",
+    "brainstorming",
+    "debugging",
+    "codex"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "craft-skills",
+    "shortDescription": "Structured software workflows for Codex.",
+    "longDescription": "Provides design-first development workflows with brainstorming, planning, bounded implementation, browser testing, debugging, and review.",
+    "developerName": "alexiolan",
+    "category": "Development",
+    "capabilities": ["Interactive", "Write"],
+    "websiteURL": "https://github.com/alexiolan/codex-craft-skills",
+    "privacyPolicyURL": "https://github.com/alexiolan/codex-craft-skills",
+    "termsOfServiceURL": "https://github.com/alexiolan/codex-craft-skills",
+    "defaultPrompt": [
+      "Plan a feature before coding it.",
+      "Debug a failing flow before fixing it.",
+      "Implement an approved plan end to end."
+    ],
+    "brandColor": "#2563EB"
+  }
+}
