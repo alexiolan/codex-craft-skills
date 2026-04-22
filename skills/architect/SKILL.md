@@ -19,12 +19,14 @@ Input handling:
 ## Process
 
 1. Read `.codex/PROJECT.md` and `AGENTS.md` if present.
-2. Inspect only relevant source/config/docs.
-3. Check `.codex/reuse-index.md` when the plan may add shared helpers, hooks, components, types, constants, or service primitives.
-4. Ask clarifying questions one at a time when requirements are ambiguous.
-5. Produce a plan with exact file paths, task order, dependencies, verification commands, and acceptance criteria.
-6. Include a Prior-Art Scan table for every new concept.
-7. For UI work, ensure `.codex/aesthetic-direction.md` exists or explicitly note that the UI design contract is missing.
+2. Use graph-first exploration before broad file reads: minimal context, semantic search, targeted file summaries, and import/importer checks when graph tools are available.
+3. When `.codex/craft-profile` has `local_llm=on`, use the local LLM for focused codebase summaries before reading many files directly.
+4. Inspect only relevant source/config/docs identified by graph, LLM, or narrow `rg`.
+5. Check `.codex/reuse-index.md` when the plan may add shared helpers, hooks, components, types, constants, or service primitives.
+6. Ask clarifying questions one at a time when requirements are ambiguous.
+7. Produce a plan with exact file paths, task order, dependencies, verification commands, acceptance criteria, and graph impact checks for risky files.
+8. Include a Prior-Art Scan table for every new concept.
+9. For UI work, ensure `.codex/aesthetic-direction.md` exists and invoke `$ux-brief`; for complex UI, use `ui-ux-pro-max` through the UX brief when available.
 
 Save approved plans to:
 

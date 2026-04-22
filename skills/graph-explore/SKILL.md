@@ -1,11 +1,11 @@
 ---
 name: graph-explore
-description: "Dispatch as a haiku agent to run code-review-graph queries. Handles graph freshness, embedding setup, semantic search, and targeted queries. Other skills should dispatch this as an agent rather than calling graph tools directly."
+description: "Use code-review-graph queries for token-efficient codebase exploration, impact analysis, and review context before broad source reads."
 ---
 
 # Graph Explore
 
-Reference for code-review-graph MCP tool operations. **Other skills call graph MCP tools directly in the main conversation** — no dedicated agents.
+Reference for code-review-graph MCP tool operations. Other skills call graph MCP tools directly in the main conversation.
 
 ## How Other Skills Use This
 

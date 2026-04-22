@@ -24,9 +24,10 @@ Input handling:
 
 ## Runtime State
 
-First action:
+For direct `$craft` invocation, first action:
 
 ```bash
+mkdir -p .codex
 cat > .codex/craft-profile <<EOF
 host=codex
 local_llm=off
@@ -34,15 +35,28 @@ routing_policy=default
 EOF
 ```
 
+If this pipeline is being followed from `$craft-local` or `$craft-ace`, do not overwrite `.codex/craft-profile`; the wrapper already set the intended runtime state.
+
 ## Phase 1: Brainstorm
 
 1. Read `.codex/PROJECT.md` and root `AGENTS.md` if present.
-2. Inspect only relevant source directories, package/config files, and existing docs.
-3. Check recent git context with `git log --oneline -10`.
-4. If graph or local LLM tooling is available, use it as optional context only; Codex remains orchestrator.
-5. Ask clarifying questions one at a time.
-6. Propose 2-3 approaches with trade-offs and lead with a recommendation.
-7. Present the selected design and wait for user approval.
+2. Check recent git context with `git log --oneline -10`.
+3. Do graph-first exploration before broad source reads:
+   - `get_minimal_context_tool` for a compact starting point when available.
+   - `build_or_update_graph_tool` if the graph is stale or missing.
+   - `semantic_search_nodes_tool` with 2-3 feature keywords.
+   - `query_graph_tool` with `file_summary`, `imports_of`, or `importers_of` for only the most relevant files/domains.
+4. When `.codex/craft-profile` has `local_llm=on`, use the local LLM early for token economy: ask it to inspect 2-3 focused paths and return a summary instead of pulling large files into Codex context. Codex still triages and verifies.
+5. Inspect only the relevant source/config/docs that graph or LLM summaries identify.
+6. Ask clarifying questions one at a time.
+7. Propose 2-3 approaches with trade-offs and lead with a recommendation.
+8. Present the selected design and wait for user approval.
+
+Token economy rules:
+- Prefer graph summaries, semantic search, and LLM file-reading summaries before loading long files directly.
+- Never ask graph tools or LLM helpers to explore the whole repo; scope to explicit domains, routes, or files.
+- Avoid graph tools known to emit huge payloads unless the user explicitly needs them: architecture overviews, full community listings, and broad change detection.
+- When the local LLM returns empty/thinking-only output, retry once with a shorter prompt; then fall back to graph plus direct file reads.
 
 ## Phase 2: Spec
 
@@ -54,7 +68,10 @@ mkdir -p .codex/plans/specs .codex/plans/archive .codex/prompts
 
 If `.codex/reuse-index.md` is missing and the feature may introduce shared utilities, hooks, components, types, constants, or helpers, invoke `$reuse-index` or explain that the reuse gate is skipped.
 
-For UI work, if `.codex/aesthetic-direction.md` is missing, invoke `$aesthetic-direction` or explain that the design contract is skipped.
+For UI work:
+- If `.codex/aesthetic-direction.md` is missing, invoke `$aesthetic-direction` or explain that the design contract is skipped.
+- Invoke `$ux-brief` after the spec exists. For complex UI, the brief should use `ui-ux-pro-max` when available; if unavailable, record the degraded design gate in the spec.
+- Fold UX brief success criteria and hard layout/a11y constraints back into the spec before planning.
 
 Write the approved design to:
 
@@ -64,7 +81,9 @@ Write the approved design to:
 
 The spec must include a Prior-Art Scan table for every new concept it introduces. Cite `.codex/reuse-index.md` when present.
 
-Review the spec for placeholders, contradictions, ambiguity, and scope creep. Present the spec path and wait for user approval before planning implementation.
+Review the spec for placeholders, contradictions, ambiguity, and scope creep.
+
+When `local_llm=on`, run a focused local LLM review of the spec for completeness, API alignment, security/safety, and reuse duplication. In `routing_policy=ace`, prefer a local review loop over Codex-only self-review: fix confirmed findings and rerun until one clean pass or diminishing returns. Present the spec path and wait for user approval before planning implementation.
 
 ## Phase 3: Plan
 
@@ -75,6 +94,8 @@ Create an implementation plan with:
 - verification commands
 - acceptance criteria
 - rollback or risk notes when relevant
+- graph impact checks for shared/high-risk files when applicable
+- explicit local LLM routing notes when `routing_policy=ace`
 
 Save the approved plan to:
 
@@ -82,7 +103,7 @@ Save the approved plan to:
 .codex/plans/YYYY-MM-DD-{feature}.md
 ```
 
-Wait for user approval before developing.
+When `local_llm=on`, run a focused local LLM review of the plan for spec coverage, task ordering, risk, security/safety, and reuse duplication. In `routing_policy=ace`, fix confirmed findings and rerun once when useful. Wait for user approval before developing.
 
 ## Phase 4: Develop
 
@@ -92,7 +113,10 @@ Codex may perform implementation directly. Only use sub-agents when the active C
 
 ## Phase 5: Browser Test
 
-After successful implementation and verification, invoke `$browser-test` with the plan/spec path when the feature has UI or browser-observable behavior.
+After successful implementation and verification:
+- Invoke `$design-review` first when UI files changed and `.codex/aesthetic-direction.md` exists.
+- Invoke `$browser-test` with the plan/spec path when the feature has UI or browser-observable behavior.
+- Do not skip browser validation for UI, routing, auth/session, form, table, modal, compare, dashboard, or other browser-visible workflows unless tooling is unavailable; if unavailable, write a manual checklist and say why.
 
 ## Phase 6: Report
 
