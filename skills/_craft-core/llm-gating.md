@@ -2,6 +2,13 @@
 
 Local LLM (LM Studio) paths run only when runtime state sets `local_llm=on`.
 
+## Localhost sandbox check
+
+Before treating LM Studio as unavailable, check `${LLM_URL:-http://127.0.0.1:1234}/v1/models`.
+If the sandbox returns `Operation not permitted` or curl exit `7`, retry the same localhost check
+with `sandbox_permissions: "require_escalated"`. If models are returned, use the local LLM; the
+failure was sandbox access, not LM Studio availability.
+
 ## Gated step: `architect` pre-exploration (Step 0)
 
 Currently `architect/SKILL.md` runs an LLM availability check and optional background exploration via `llm-agent.sh`. Under profile gating:

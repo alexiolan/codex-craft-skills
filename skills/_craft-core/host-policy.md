@@ -41,6 +41,14 @@ Use for:
 
 Shared workflow docs describe which tier a phase needs. Host adapters decide the concrete model, tool, or runtime that satisfies that tier.
 
+## Token economy rules
+
+- Prefer code-review-graph summaries, semantic search, and impact/review context before broad source reads.
+- When local LLM is enabled, let it read focused files and return summaries or reviews before Codex spends context on long source.
+- Keep graph and LLM scopes narrow: explicit domains, routes, files, and review questions.
+- Use browser screenshots/snapshots for UI evidence instead of long textual descriptions of rendered pages.
+- Escalate to premium reasoning only after cheap context has narrowed the problem.
+
 ## Non-goals
 
 - Do not hardcode vendor-specific model names into shared policy files.
